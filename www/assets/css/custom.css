@@ -1,0 +1,104 @@
+/* Sticky footer styles
+-------------------------------------------------- */
+
+html,
+body {
+  height: 100%;
+  /* The html and body elements cannot have any padding or margin. */
+  /* padding-top: 70px; */
+}
+
+body { 
+	background: url(../img/bg-02.jpg) no-repeat fixed 100% 100%;
+	
+	-webkit-background-size: 100%;
+	-o-background-size: 100%;
+	-moz-background-size: 100%;
+	-ms-background-size: 100%;
+	-khtml-background-size: 100%;
+	background-size: 100%;
+	
+	/* color: #d5d5d5 !important; */
+	
+	padding-top: 70px; /* navbar-fixed-top */
+}
+
+#army-loading {
+}
+
+.table-no-bottom {
+	margin-bottom:0;
+}
+
+.block-army-ent {
+	float:left;
+	position:relative;
+	width:81px;
+	padding:5px;
+}
+
+.span-army-ent-quantity  {
+	position:absolute;
+	right:20px;
+	bottom:15px;
+	color:#eee;
+	text-shadow: 0px 1px 1px #111, -1px 0px 1px #111, 0px -1px 1px #111, 1px 0px 1px #111;
+}
+
+.img-army-ent {
+	width:100%;
+}
+
+@media (max-width: 992px) {
+	.table-army-info {
+		font-size: 10px;
+	}
+	
+	.span-army-ent-quantity  {
+		font-size: 10px;
+		right:13px;
+		bottom:7px;
+	}
+}
+
+@media (max-width: 778px) {
+	.table-army-info {
+		font-size: 8px;
+	}
+	
+	.block-army-ent {
+		width:70px;
+		padding:5px;
+	}
+}
+
+@media (min-width: 992px) {
+	.block-army-ent {
+		width:105px;
+		padding:10px;
+	}
+	
+	.table-army-info {
+	}
+}
+
+@media (min-width: 1200px) {
+	.block-army-ent {
+		width:128px;
+	}
+}
+
+/*
+.navbar-inverse {
+	background-color: #152230 !important;
+}
+
+.navbar-brand {
+	z-index: 100001;
+}
+
+.form-control {
+	background-color: rgba(21,34,48,0.8) !important;
+	color: #d5d5d5 !important;
+}
+*/

@@ -1,0 +1,8 @@
+*.osc
+*.ost
+*?-local.os
+/assets.src/
+/www/2
+/www/3
+/www/4
+/www/assets/404

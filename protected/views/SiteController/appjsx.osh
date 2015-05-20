@@ -1,0 +1,376 @@
+﻿Application = React.createClass({
+	render: function(){
+		return (
+			<div>
+				<AppNav app={this} ref="nav" />
+				<AppBody app={this} ref="body" page={this.props.page || "army"} />
+			</div>
+		);
+	}
+});
+
+Menu = React.createClass({
+	getInitialState: function() {
+		return {
+		};
+	},
+	
+	getDefaultItems: function(){
+		return {
+			items: [
+				{
+					text: "Action",
+				},
+				{
+					text: "Support",
+					active: true,
+				},
+				{
+					divider: true
+				},
+				{
+					text: "Footer",
+				},
+			]
+		};
+	},
+	
+	render: function(){
+		var items = this.props.items;
+		return (
+			<ul>
+			{items.map(function(item){
+				if(item.divider){
+					return <li className="divider" />;
+				}
+				return <li className={item.active ? "active" : ""} key={item.text} href="#">{item.text}</li>;
+			})}
+			</ul>
+		);
+	}
+});
+
+ArmyEntity = React.createClass({
+	render: function(){
+		if(1)
+		return (
+			<div className="block-army-ent">
+				<span className="span-army-ent-quantity">{this.props.data.quantity}</span>
+				<img className="img-army-ent" src={sprintf("assets/img/entities/ent-%04d.png", this.props.data.ent_id)} />
+			</div>
+		);
+		
+		return (
+			<div className="col-md-2">
+				<div className="thumbnail">
+					<p><img className="img-responsive2" style={{width:"100%"}} src={sprintf("assets/img/entities/ent-%04d.png", this.props.data.ent_id)} /></p>
+					<table className="table table-striped table-condensed" style={{marginBottom:0}}>
+						<colgroup>
+							<col span="1" style={{width:"100%"}} />
+							<col />
+						</colgroup>
+						<tr className="info">
+							<td>Количество</td>
+							<td style={{textAlign:"right"}}>{this.props.data.quantity}</td>
+						</tr>
+						<tr>
+							<td>Атака</td>
+							<td style={{textAlign:"right"}}>14</td>
+						</tr>
+						<tr>
+							<td>Защита</td>
+							<td style={{textAlign:"right"}}>5</td>
+						</tr>
+						<tr>
+							<td>Здоровье</td>
+							<td style={{textAlign:"right"}}>20</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		);
+		
+		return (
+			<div className="col-md-2">
+				<div className="thumbnail" style={{position:"relative"}}>
+					<img className="img-responsive2" style={{width:"100%"}} src={sprintf("assets/img/entities/ent-%04d.png", this.props.data.ent_id)} />
+					<div style={{position:"absolute", right:"10px", bottom:"10px"}}>q:{this.props.data.quantity}</div>
+				</div>
+			</div>
+		);
+	}
+});
+
+Army = React.createClass({
+	render: function(){
+		var entities = this.props.data.entities.map(function(ent, i){
+			// console.log("render ent", ent);
+			return (
+				<ArmyEntity data={ent} index={i} key={sprintf("army-%d-ent-%d", ent.army_id, ent.ent_id)} />
+			);
+		}.bind(this));
+		return (
+			<div className="row">
+				<div className="col-md-12">
+					<div className="panel panel-default">
+					  <div className="panel-body">
+						<div className="row">
+							<div className="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+								<p><img style={{width:"100%"}} src={sprintf("assets/img/entities/ent-%04d.png", this.props.data.ent_id)} /></p>
+								<p className="text-center text-primary">Don Marchento</p>
+							</div>
+							<div className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+								<table className="table table-striped table-condensed table-army-info">
+									<colgroup>
+										<col span="1" style={{width:"100%"}} />
+										<col />
+									</colgroup>
+									<thead>
+										<tr>
+											<th colSpan="4">Командир</th>
+										</tr>
+									</thead>
+									<tr>
+										<td>Атака</td>
+										<td className="info" style={{textAlign:"right", whiteSpace:"nowrap"}}><b>3</b> <span className="label label-success">+2</span></td>
+										<td style={{textAlign:"right", whiteSpace:"nowrap"}}><b>14</b> <span className="label label-success">+10</span></td>
+									</tr>
+									<tr>
+										<td>Защита</td>
+										<td className="info" style={{textAlign:"right", whiteSpace:"nowrap"}}><b>0</b></td>
+										<td style={{textAlign:"right"}}><b>5</b></td>
+									</tr>
+									<tr>
+										<td>Здоровье</td>
+										<td style={{textAlign:"right", whiteSpace:"nowrap"}} colSpan="3"><b>27</b> <span className="label label-danger">-73</span></td>
+									</tr>
+									<tr>
+										<td>Зарплата</td>
+										<td style={{textAlign:"right"}} colSpan="3"><b>20</b> <span className="label label-warning">+12</span></td>
+									</tr>
+									<tr>
+										<td>Скорость</td>
+										<td style={{textAlign:"right"}} colSpan="3"><b>5</b></td>
+									</tr>
+								</table>
+								<table className="table table-striped table-condensed table-army-info table-no-bottom">
+									<colgroup>
+										<col span="1" style={{width:"100%"}} />
+										<col />
+									</colgroup>
+									<thead>
+										<tr>
+											<th colSpan="4">Отряд</th>
+										</tr>
+									</thead>
+									<tr>
+										<td>Атака</td>
+										<td style={{textAlign:"right", whiteSpace:"nowrap"}}><b>300</b> /</td>
+										<td style={{textAlign:"right"}}><b>1489</b></td>
+									</tr>
+									<tr>
+										<td>Защита</td>
+										<td style={{textAlign:"right", whiteSpace:"nowrap"}}><b>120</b> /</td>
+										<td style={{textAlign:"right"}}><b>1300</b></td>
+									</tr>
+									<tr>
+										<td>Здоровье</td>
+										<td style={{textAlign:"right"}} colSpan="3"><b>2000</b></td>
+									</tr>
+									<tr>
+										<td>Существ</td>
+										<td style={{textAlign:"right"}} colSpan="3"><b>3020</b></td>
+									</tr>
+									<tr>
+										<td>Скорость</td>
+										<td style={{textAlign:"right"}} colSpan="3"><b>4</b></td>
+									</tr>
+								</table>
+							</div>
+							<div className="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+								{entities}
+							</div>
+						</div>
+					  </div>
+					</div>		
+				</div>
+			</div>
+			/*
+			<div className="row">
+				<div className="col-md-12">
+					<h3>Отряд №{this.props.index+1}</h3>
+				</div>
+				<div className="thumbnail">
+					<div className="col-md-2">
+						<img style={{width:"100%"}} src={sprintf("assets/img/entities/ent-%04d.png", this.props.data.ent_id)} />
+					</div>
+				</div>
+				{entities}
+			</div>
+			*/
+		);
+	}
+});
+
+AppBodyArmy = React.createClass({
+	getInitialState: function() {
+		return {army: []};
+	},
+	
+	componentDidMount: function(){
+		var l = Ladda.create($("#army-loading")[0]);
+		l.start();
+		loadJSON({
+			url: <%=json.encode(@controller.createUrl{controller="api", action="army"})%>,
+			success: function(result){
+				l.stop();
+				console.log("army loaded", result);
+				if(this.isMounted()){
+					this.setState({army: result.data});
+				}
+			}.bind(this),
+			error: function(){
+				l.stop();
+				console.log("army load error", arguments);
+			}.bind(this),
+		});
+		
+	},
+	
+	render: function(){
+		var army = this.state.army.map(function(army, i){
+			// console.log("render army", army);
+			return (
+				<Army data={army} index={i} key={"army-"+army.id} />
+			);
+		}.bind(this));
+		return (
+			<div>
+				<div className="row" key="title">
+					<div className="col-md-12">
+						<div className="page-header">
+							<h1><%=_T.MENU_ARMY%><span id="army-loading">&nbsp;&nbsp;</span></h1>
+						</div>
+					</div>
+				</div>
+				{army}
+			</div>
+		);
+	}
+});
+
+AppBodyTest = React.createClass({
+	render: function(){
+		return (
+			<div>
+				<div className="row">
+					<div className="col-md-6">
+						<h1>Hello, world!</h1>
+						<Panel />
+					</div>
+					<div className="col-md-6">
+						<Panel />
+					</div>
+				</div>
+			</div>		
+		);
+	}
+});
+
+AppBody = React.createClass({
+	getInitialState: function() {
+		return {page: null};
+	},
+	
+	selectPage: function(page){
+		this.setState({page: page});
+	},
+	
+	render: function(){
+		var page = this.state.page || this.props.page;
+		console.log("AppBody page: "+page);
+		if(page === "army"){
+			return <AppBodyArmy app={this.props.app} />;
+		}
+		return <AppBodyTest app={this.props.app} />;
+	}
+});
+
+AppNav = React.createClass({
+	getInitialState: function() {
+		return {menu: "game"};
+	},
+	
+	handleClickPage: function(page, event){
+		console.log('handleClickPage '+page);
+		event.preventDefault();
+		this.props.app.refs.body.selectPage(page);
+	},
+	
+	render: function(){
+		return (
+			<nav className="navbar navbar-inverse navbar-fixed-top">
+			  <div className="container">
+
+				<div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				  <ul className="nav navbar-nav">
+					<li className="dropdown">
+					  <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Menu <span className="caret"></span></a>
+					  <ul className="dropdown-menu" role="menu">
+						<li><a href onClick={this.handleClickPage.bind(this, "buildings")}><%=_T.MENU_BUILDINGS%></a></li>
+						<li><a href onClick={this.handleClickPage.bind(this, "researches")}><%=_T.MENU_RESEARCHES%></a></li>
+						<li><a href onClick={this.handleClickPage.bind(this, "production")}><%=_T.MENU_PRODUCTION%></a></li>
+						<li><a href onClick={this.handleClickPage.bind(this, "army")}><%=_T.MENU_ARMY%></a></li>
+						<li><a href onClick={this.handleClickPage.bind(this, "locality")}><%=_T.MENU_LOCALITY%></a></li>
+						<li className="divider"></li>
+						<li><a href="#">Separated link</a></li>
+						<li className="divider"></li>
+						<li><a href="#">One more separated link</a></li>
+					  </ul>
+					</li>
+				  </ul>
+				  
+				  <form className="navbar-form navbar-left" role="search">
+					<div className="form-group">
+					  <input type="text" className="form-control" placeholder="Search" />
+					</div>
+					<button type="submit" className="btn btn-default">Submit</button>
+				  </form>
+				  
+				  <ul className="nav navbar-nav navbar-right">
+					<li><a href="#">Link</a></li>
+					<li className="dropdown">
+					  <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span className="caret"></span></a>
+					  <ul className="dropdown-menu" role="menu">
+						<li><a href="#">Action</a></li>
+						<li><a href="#">Another action</a></li>
+						<li><a href="#">Something else here</a></li>
+						<li className="divider"></li>
+						<li><a href="#">Separated link</a></li>
+					  </ul>
+					</li>
+				  </ul>
+				</div> 
+			  
+			  </div>
+			</nav>
+		);
+	}
+	
+});
+
+Panel = React.createClass({
+	render: function(){
+		return (
+			<div className="panel panel-default">
+			  <div className="panel-heading">
+				<h3 className="panel-title">Panel title</h3>
+			  </div>
+			  <div className="panel-body">
+				Panel content
+			  </div>
+			</div>
+		);
+	}
+});
+

@@ -1,0 +1,96 @@
+﻿<!doctype html>
+<html lang="<%=app.lang%>">
+<% 
+	var CLIENT_VERSION = app.params.CLIENT_VERSION
+	var baseUrl = app.request.getBaseUrl(true)
+	var useInternet = true
+%>
+<head>
+	<meta charset="<%=app.charset%>">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="<%=html.encode(@controller.pageDesc)%>">
+	<meta name="keywords" content="<%=html.encode(@controller.pageKeywords)%>">
+	<meta name="author" content="<%=html.encode(@controller.pageAuthor)%>">
+	<link rel="shortcut icon" href="assets/ico/favicon.png?<%=CLIENT_VERSION%>">
+
+	<title><%=html.encode(@controller.pageTitle)%></title>	
+
+	<%if(false){%>
+	<link rel="stylesheet" href="assets/404/css/reset.css?<%=CLIENT_VERSION%>" type="text/css" />
+	<link rel="stylesheet" href="assets/404/css/404.css?<%=CLIENT_VERSION%>" type="text/css" />
+	<link rel="stylesheet" href="assets/404/css/main.css?<%=CLIENT_VERSION%>" type="text/css" />
+	<script src="assets/404/js/404.js?<%=CLIENT_VERSION%>"></script>
+	<%}%>
+	
+	<link rel="stylesheet" href="assets/bootstrap-3.3.4/css/bootstrap.min.css?<%=CLIENT_VERSION%>" type="text/css" />
+	<link rel="stylesheet" href="assets/bootstrap-3.3.4/css/bootstrap-theme.min.css?<%=CLIENT_VERSION%>" type="text/css" />
+	<link rel="stylesheet" href="assets/ladda-loading-btn/css/ladda-themeless.min.css?<%=CLIENT_VERSION%>" type="text/css" />
+	<%if(false){%><link rel="stylesheet" href="assets/css/theme-01.css?<%=CLIENT_VERSION%>" type="text/css" /><%}%>
+	<link rel="stylesheet" href="assets/css/custom.css?<%=CLIENT_VERSION%>" type="text/css" />
+	<%if(false){%><link rel="stylesheet" href="assets/css/anim-hole.css?<%=CLIENT_VERSION%>" type="text/css" /><%}%>
+</head>
+<body>
+	<%if(false){%>
+	<div id="fof">
+		<div></div>
+		<canvas></canvas>
+	</div>
+	<%}%>
+
+	<div id="wrap" class="disable-selection">
+		<div class="container" id="body-container">
+		</div>
+	</div>
+	
+    <script src="assets/react-0.13.3/shared/thirdparty/es5-shim.min.js?<%=CLIENT_VERSION%>"></script>
+    <script src="assets/react-0.13.3/shared/thirdparty/es5-sham.min.js?<%=CLIENT_VERSION%>"></script>
+    <script src="assets/react-0.13.3/shared/thirdparty/console-polyfill.js?<%=CLIENT_VERSION%>"></script>
+    <script src="assets/react-0.13.3/build/react.js?<%=CLIENT_VERSION%>"></script>
+    <script src="assets/react-0.13.3/build/JSXTransformer.js?<%=CLIENT_VERSION%>"></script>
+    <!-- <script src="assets/react-0.13.3/shared/thirdparty/jquery.min.js?<%=CLIENT_VERSION%>" charset="utf-8"></script> -->
+    <script src="assets/js/jquery-2.1.4.min.js?<%=CLIENT_VERSION%>" charset="utf-8"></script>
+	<script src="assets/bootstrap-3.3.4/js/bootstrap.min.js?<%=CLIENT_VERSION%>" charset="utf-8"></script>
+	<%if(false){%><script type="text/jsx" src="assets/jsx/app.js?<%=CLIENT_VERSION%>" charset="utf-8"></script><%}%>
+	<script src="assets/ladda-loading-btn/js/spin.min.js?<%=CLIENT_VERSION%>"></script>
+	<script src="assets/ladda-loading-btn/js/ladda.min.js?<%=CLIENT_VERSION%>"></script>
+    <script src="assets/js/utils.js?<%=CLIENT_VERSION%>" charset="utf-8"></script>
+	<script type="text/jsx" src="<%=@controller.createUrl{controller="site", action="appjsx"}.."?"..CLIENT_VERSION%>" charset="utf-8"></script>
+	
+    <script type="text/jsx">
+		$(function(){
+			app = React.render(
+				<Application />,
+				document.getElementById('body-container')
+			);
+		});
+		
+		<%if(false){%>
+		(function(){
+			var allowStartStep = 0;
+			function startApplication(){
+				/* app = React.render(
+					<Application />,
+					document.getElementById('body-container')
+				); */
+				window.EYE_OVERLAY_STOP = true;
+			}
+			function incAllowStartStep(){
+				console.log('incAllowStartStep: '+(allowStartStep+1));
+				if(++allowStartStep == 2){
+					startApplication();
+				}
+			}
+			setTimeout(incAllowStartStep, 2000);
+			
+			$(function(){
+				incAllowStartStep();
+				
+				// $(".hole-container").remove();
+				
+			});
+		})();
+		<%}%>
+	</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+﻿<%
+	// require framework
+	require("../framework/components/Application")
+
+	// set application protected path
+	var appPath = "../protected"
+	
+	// require OS site application class
+	require(appPath.."/components/GameApplication")
+	
+	// run application
+	GameApplication(require(appPath.."/config/config-main")).run()
+	
