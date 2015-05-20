@@ -5,7 +5,7 @@ return {
 	params = {
 		user = "root",
 		// password = "",
-		dbname = "oxsar3-loc"			
+		dbname = "metro"			
 	},
 }
 		
