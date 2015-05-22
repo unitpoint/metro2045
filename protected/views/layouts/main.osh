@@ -25,6 +25,7 @@
 	
 	<link rel="stylesheet" href="assets/bootstrap-3.3.4/css/bootstrap.min.css?<%=CLIENT_VERSION%>" type="text/css" />
 	<link rel="stylesheet" href="assets/bootstrap-3.3.4/css/bootstrap-theme.min.css?<%=CLIENT_VERSION%>" type="text/css" />
+	<link rel="stylesheet" href="assets/bootstrap3-editable/css/bootstrap-editable.css?<%=CLIENT_VERSION%>" type="text/css" />
 	<link rel="stylesheet" href="assets/ladda-loading-btn/css/ladda-themeless.min.css?<%=CLIENT_VERSION%>" type="text/css" />
 	<%if(false){%><link rel="stylesheet" href="assets/css/theme-01.css?<%=CLIENT_VERSION%>" type="text/css" /><%}%>
 	<link rel="stylesheet" href="assets/css/custom.css?<%=CLIENT_VERSION%>" type="text/css" />
@@ -51,7 +52,7 @@
     <!-- <script src="assets/react-0.13.3/shared/thirdparty/jquery.min.js?<%=CLIENT_VERSION%>" charset="utf-8"></script> -->
     <script src="assets/js/jquery-2.1.4.min.js?<%=CLIENT_VERSION%>" charset="utf-8"></script>
 	<script src="assets/bootstrap-3.3.4/js/bootstrap.min.js?<%=CLIENT_VERSION%>" charset="utf-8"></script>
-	<%if(false){%><script type="text/jsx" src="assets/jsx/app.js?<%=CLIENT_VERSION%>" charset="utf-8"></script><%}%>
+	<script src="assets/bootstrap3-editable/js/bootstrap-editable.min.js?<%=CLIENT_VERSION%>" charset="utf-8"></script>
 	<script src="assets/ladda-loading-btn/js/spin.min.js?<%=CLIENT_VERSION%>"></script>
 	<script src="assets/ladda-loading-btn/js/ladda.min.js?<%=CLIENT_VERSION%>"></script>
     <script src="assets/js/utils.js?<%=CLIENT_VERSION%>" charset="utf-8"></script>
@@ -60,7 +61,7 @@
     <script type="text/jsx">
 		$(function(){
 			app = React.render(
-				<Application />,
+				<Application userLogged={<%=json.encode(app.user.isLogged)%>} />,
 				document.getElementById('body-container')
 			);
 		});

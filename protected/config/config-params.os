@@ -5,4 +5,5 @@ return extends {
 } {
 	CLIENT_VERSION = 1,
 	// map = require("config-map"),
+	MAX_ARMY_NAME_LEN = 20,
 }

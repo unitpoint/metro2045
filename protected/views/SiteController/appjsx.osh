@@ -1,9 +1,15 @@
 ﻿Application = React.createClass({
+	getInitialState: function() {
+		return {
+			userLogged: false
+		};
+	},
+	
 	render: function(){
 		return (
 			<div>
 				<AppNav app={this} ref="nav" />
-				<AppBody app={this} ref="body" page={this.props.page || "army"} />
+				<AppBody app={this} ref="body" page={this.props.page || "index"} />
 			</div>
 		);
 	}
@@ -101,7 +107,52 @@ ArmyEntity = React.createClass({
 	}
 });
 
+ArmyItem = React.createClass({
+	render: function(){
+		if(1)
+		return (
+			<div className="block-army-item">
+				<span className="span-army-item-quantity">{this.props.data.quantity}</span>
+				<img className="img-army-item" src={sprintf("assets/img/items/item-%04d.png", this.props.data.item_id)} />
+			</div>
+		);
+	}
+});
+
 Army = React.createClass({
+	handleClickNewEnt: function(event){
+		console.log('handleClickNewEnt');
+		event.preventDefault();		
+	},
+	
+	componentDidMount: function(){
+		var self = this;
+		$("#army-commander-name-"+self.props.data.id).editable({
+			title: <%=json.encode(_T.EDIT_NAME)%>,
+			ajaxOptions: { dataType: 'json' },
+			// mode: "inline",
+			url: <%=json.encode(@controller.createUrl{controller="api", action="saveArmyName"})%>,
+			// name: "name",
+			pk: self.props.data.id,
+			/* params: function(params){
+				params.id = self.props.data.id;
+				return params;
+			}, */
+			success: function(response, newValue){
+				// console.log("response", response, newValue);
+				setTimeout(function(){
+					$("#army-commander-name-"+self.props.data.id).editable("setValue", response.value, true);
+				}, 1);
+			},
+			error: function(response, newValue){
+			},
+		});
+	},
+	
+	componentWillUnmount: function(){
+		$("#army-commander-name-"+this.props.data.id).editable("destroy");
+	},
+	
 	render: function(){
 		var entities = this.props.data.entities.map(function(ent, i){
 			// console.log("render ent", ent);
@@ -109,15 +160,31 @@ Army = React.createClass({
 				<ArmyEntity data={ent} index={i} key={sprintf("army-%d-ent-%d", ent.army_id, ent.ent_id)} />
 			);
 		}.bind(this));
+		entities.push(
+			<div className="block-army-ent">
+				<a href onClick={this.handleClickNewEnt}><img className="img-army-ent" src={sprintf("assets/img/entities/ent-%04d.png", 0)} /></a>
+			</div>
+		);
+		
+		var items = [];
+		for(var i = 1; i <= 28; i++){
+			var item = {item_id: i, type: 1, quantity: 1+(Math.random() * 10)|0};
+			items.push(
+				<ArmyItem data={item} index={i} key={sprintf("army-%d-item-%d", this.props.data.id, item.item_id)} />
+			);
+		}
+		
 		return (
 			<div className="row">
-				<div className="col-md-12">
-					<div className="panel panel-default">
-					  <div className="panel-body">
+				<div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+					<div className="list-group">
+					  <div className="list-group-item list-group-item-danger">
+						<a href id={"army-commander-name-"+this.props.data.id}>{this.props.data.name}</a>
+					  </div>
+					  <div className="list-group-item">
 						<div className="row">
 							<div className="col-lg-2 col-md-2 col-sm-2 col-xs-2">
 								<p><img style={{width:"100%"}} src={sprintf("assets/img/entities/ent-%04d.png", this.props.data.ent_id)} /></p>
-								<p className="text-center text-primary">Don Marchento</p>
 							</div>
 							<div className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
 								<table className="table table-striped table-condensed table-army-info">
@@ -164,6 +231,10 @@ Army = React.createClass({
 										</tr>
 									</thead>
 									<tr>
+										<td>Существ</td>
+										<td style={{textAlign:"right"}} colSpan="3"><b>3020</b></td>
+									</tr>
+									<tr>
 										<td>Атака</td>
 										<td style={{textAlign:"right", whiteSpace:"nowrap"}}><b>300</b> /</td>
 										<td style={{textAlign:"right"}}><b>1489</b></td>
@@ -178,10 +249,6 @@ Army = React.createClass({
 										<td style={{textAlign:"right"}} colSpan="3"><b>2000</b></td>
 									</tr>
 									<tr>
-										<td>Существ</td>
-										<td style={{textAlign:"right"}} colSpan="3"><b>3020</b></td>
-									</tr>
-									<tr>
 										<td>Скорость</td>
 										<td style={{textAlign:"right"}} colSpan="3"><b>4</b></td>
 									</tr>
@@ -189,6 +256,16 @@ Army = React.createClass({
 							</div>
 							<div className="col-lg-7 col-md-7 col-sm-7 col-xs-7">
 								{entities}
+							</div>
+						</div>
+					  </div>
+					  <div className="list-group-item list-group-item-info">
+						Предметы
+					  </div>
+					  <div className="list-group-item">
+						<div className="row">
+							<div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+								{items}
 							</div>
 						</div>
 					  </div>
@@ -277,6 +354,24 @@ AppBodyTest = React.createClass({
 	}
 });
 
+AppBodyIndex = React.createClass({
+	render: function(){
+		return (
+			<div>
+				<div className="row">
+					<div className="col-md-12">
+						<h1>Hello, world!</h1>
+						<Panel />
+					</div>
+					<div className="col-md-6">
+						<Panel />
+					</div>
+				</div>
+			</div>		
+		);
+	}
+});
+
 AppBody = React.createClass({
 	getInitialState: function() {
 		return {page: null};
@@ -292,7 +387,99 @@ AppBody = React.createClass({
 		if(page === "army"){
 			return <AppBodyArmy app={this.props.app} />;
 		}
+		if(page === "index"){
+			return <AppBodyIndex app={this.props.app} />;
+		}
 		return <AppBodyTest app={this.props.app} />;
+	}
+});
+
+LoginForm = React.createClass({
+	getInitialState: function() {
+		return {form: "login"};
+	},
+	
+	switchToLoginForm: function(event){
+		event.preventDefault();
+		this.setState({form: "login"});
+	},
+	
+	switchToRemembeMeForm: function(event){
+		event.preventDefault();
+		this.setState({form: "rememberMe"});
+	},
+	
+	render: function(){
+		if(this.state.form === "rememberMe"){
+			return (
+				<div>
+					<%if(true){%><div className="page-header">
+						<h1>Remember password</h1>
+					</div><%}%>
+					<form className="" action="" method="post">
+						<div className="form-group">
+							<label className="control-label" for="LoginForm_username">Username</label>
+							<input className="form-control" placeholder="Введите логин или е-майл" type="text" name="LoginForm[username]" id="LoginForm_username" />
+						</div>
+						<div className="form-group">
+							<p><button className="btn btn-primary btn-lg" type="submit"><span className="glyphicon glyphicon-ok"></span> Remember password</button></p>
+							<p><button className="btn btn-default" onClick={this.switchToLoginForm}>Login</button></p>
+							<p><button className="btn btn-info">Create account</button></p>
+						</div>
+					</form>
+				</div>
+			);
+		}
+		return (
+			<div>
+				<%if(true){%><div className="page-header">
+					<h1>Войти</h1>
+				</div><%}%>
+				<form className="" action="" method="post">
+					<div className="form-group">
+						<label className="control-label" for="LoginForm_username">Username</label>
+						<input className="form-control" placeholder="Enter your username" type="text" name="LoginForm[username]" id="LoginForm_username" />
+					</div>
+					<div className="form-group">
+						<label className="control-label" for="LoginForm_password">Password</label>
+						<input className="form-control" placeholder="Enter your password" type="password" name="LoginForm[password]" id="LoginForm_password" />
+					</div>
+					<div className="checkbox">
+						<label>
+						  <input type="checkbox" name="LoginForm[remember_me]" id="LoginForm_remember_me" /> Check me out
+						</label>
+					</div>
+					<div className="form-group">
+						<p><button className="btn btn-primary btn-lg" type="submit"><span className="glyphicon glyphicon-ok"></span> Submit</button></p>
+						<p><button className="btn btn-warning" onClick={this.switchToRemembeMeForm}>Remember password</button></p>
+						<p><button className="btn btn-info">Create account</button></p>
+					</div>
+				</form>
+			</div>
+		);
+	}
+});
+
+NavUserItem = React.createClass({
+	render: function(){
+		if(this.props.app.userLogged){
+			
+		}else{
+			return (
+				<li className="dropdown">
+				  <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Войти <span className="caret"></span></a>
+				  <div className="dropdown-menu" role="menu">
+					<div className="dropdown-menu-login">
+						<div className="row">
+							<div className="col-md-12">
+								<LoginForm app={this.props.app} />
+							</div>
+						</div>
+					</div>
+				  </div>
+				</li>
+			);
+		}
 	}
 });
 
@@ -302,8 +489,8 @@ AppNav = React.createClass({
 	},
 	
 	handleClickPage: function(page, event){
-		console.log('handleClickPage '+page);
 		event.preventDefault();
+		console.log('handleClickPage '+page);
 		this.props.app.refs.body.selectPage(page);
 	},
 	
@@ -349,6 +536,7 @@ AppNav = React.createClass({
 						<li><a href="#">Separated link</a></li>
 					  </ul>
 					</li>
+					<NavUserItem app={this.props.app} />
 				  </ul>
 				</div> 
 			  

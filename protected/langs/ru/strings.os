@@ -21,6 +21,8 @@
 	MENU_HERO = "Герой",
 	MENU_LOGOUT = "Выход",
 	
+	EDIT_NAME = "Редактировать имя",
+	
 	STATION_LUBYANKA = "Лубянка",
 	STATION_KUZNETSKY_MOST = "Кузнецкий мост",
 	
