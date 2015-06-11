@@ -1,3 +1,6 @@
+require("consts")
+require("consts-local", false)
+
 return {
 	charset = "utf-8",
 	lang = "ru",
@@ -24,7 +27,6 @@ return {
 	components = {
 		session = {
 			class = "FileSession",
-			
 		}.merge(require("session-local.os", false)),
 		urlManager = {
 			class = "UrlManager",

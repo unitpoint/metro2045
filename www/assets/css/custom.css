@@ -23,8 +23,36 @@ body {
 	padding-top: 70px; /* navbar-fixed-top */
 }
 
+.div-battle-board {
+	position:relative;
+	/* width:800px;
+	height:800px; */
+}
+
+.div-battle-cell {
+	position:absolute;
+	/* width:100px;
+	height:100px; */
+	border:dashed 1px #000;
+}
+
+.div-battle-board-new {
+	position:relative;
+	width: 1024px;
+	height: 400px;
+	background-color: #aaa;
+}
+
+.battle-ent-enemy {
+	border:solid 1px #e00;
+}
+
+.battle-ent-my {
+	border:solid 1px #00e;
+}
+
 .dropdown-menu-login {
-	width:300px;
+	width:340px;
 	padding: 0 15px 25px 15px;
 }
 
@@ -33,6 +61,12 @@ body {
 }
 
 #army-loading {
+}
+
+.img-loading {
+}
+
+.span-loading-dummy {
 }
 
 .table-no-bottom {
@@ -53,12 +87,27 @@ body {
 	padding:5px;
 }
 
-.span-army-ent-quantity, .span-army-item-quantity  {
+.block-battle-ent {
+	display:block;
+	width:100%;
+	height:100%;
+}
+
+.img-battle-ent {
+	width:100%;
+}
+
+.span-army-ent-quantity, .span-army-item-quantity , .span-battle-ent-quantity {
 	position:absolute;
 	right:20px;
 	bottom:15px;
 	color:#eee;
 	text-shadow: 0px 1px 1px #111, -1px 0px 1px #111, 0px -1px 1px #111, 1px 0px 1px #111;
+}
+
+.span-battle-ent-quantity {
+	right:6px;
+	bottom:2px;
 }
 
 .img-army-ent, .img-army-item {
@@ -74,6 +123,10 @@ body {
 		font-size: 10px;
 		right:13px;
 		bottom:7px;
+	}
+	
+	.span-battle-ent-quantity {
+		font-size: 10px;
 	}
 }
 

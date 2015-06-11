@@ -9,7 +9,7 @@
 		return (
 			<div>
 				<AppNav app={this} ref="nav" />
-				<AppBody app={this} ref="body" page={this.props.page || "index"} />
+				<AppBody app={this} ref="body" page={this.props.page || "battle" || "index"} />
 			</div>
 		);
 	}
@@ -236,12 +236,12 @@ Army = React.createClass({
 									</tr>
 									<tr>
 										<td>Атака</td>
-										<td style={{textAlign:"right", whiteSpace:"nowrap"}}><b>300</b> /</td>
+										<td className="info" style={{textAlign:"right", whiteSpace:"nowrap"}}><b>300</b></td>
 										<td style={{textAlign:"right"}}><b>1489</b></td>
 									</tr>
 									<tr>
 										<td>Защита</td>
-										<td style={{textAlign:"right", whiteSpace:"nowrap"}}><b>120</b> /</td>
+										<td className="info" style={{textAlign:"right", whiteSpace:"nowrap"}}><b>120</b></td>
 										<td style={{textAlign:"right"}}><b>1300</b></td>
 									</tr>
 									<tr>
@@ -289,26 +289,42 @@ Army = React.createClass({
 	}
 });
 
+LoadingSpan = React.createClass({
+	getInitialState: function() {
+		return {loading: true};
+	},
+	
+	render: function(){
+		if(this.state.loading){
+			return <img className="img-loading" src="assets/img/loading.gif" />;
+		}
+		return <span className="span-loading-dummy" />;
+	}
+});
+
 AppBodyArmy = React.createClass({
 	getInitialState: function() {
 		return {army: []};
 	},
 	
+	setLoadingState: function(value){
+		this.refs.loadingSpan.setState({loading: value});
+	},
+	
 	componentDidMount: function(){
-		var l = Ladda.create($("#army-loading")[0]);
-		l.start();
+		this.setLoadingState(true);
 		loadJSON({
 			url: <%=json.encode(@controller.createUrl{controller="api", action="army"})%>,
 			success: function(result){
-				l.stop();
 				console.log("army loaded", result);
+				this.setLoadingState(false);
 				if(this.isMounted()){
 					this.setState({army: result.data});
 				}
 			}.bind(this),
 			error: function(){
-				l.stop();
 				console.log("army load error", arguments);
+				this.setLoadingState(false);
 			}.bind(this),
 		});
 		
@@ -326,7 +342,7 @@ AppBodyArmy = React.createClass({
 				<div className="row" key="title">
 					<div className="col-md-12">
 						<div className="page-header">
-							<h1><%=_T.MENU_ARMY%><span id="army-loading">&nbsp;&nbsp;</span></h1>
+							<h1><%=_T.MENU_ARMY%> &nbsp;<LoadingSpan ref="loadingSpan" /></h1>
 						</div>
 					</div>
 				</div>
@@ -372,12 +388,111 @@ AppBodyIndex = React.createClass({
 	}
 });
 
+BATTLE_CELLS_WIDTH = <%=BATTLE_CELLS_WIDTH%>;
+BATTLE_CELLS_HEIGHT = <%=BATTLE_CELLS_HEIGHT%>;
+
+BATTLE_CELL_WIDTH = <%=BATTLE_CELL_WIDTH%>;
+BATTLE_CELL_HEIGHT = <%=BATTLE_CELL_HEIGHT%>;
+
+var addBattleMapEnt = function(map, x, y, ent_id){
+	if(map[x] === undefined){
+		map[x] = {}
+	}
+	map[x][y] = {ent_id: ent_id, type: 1, quantity: 1+(Math.random() * 10)|0};
+}
+
+BattleEntity = React.createClass({
+	render: function(){
+		return (
+			<a href className="block-battle-ent">
+				<span className="span-battle-ent-quantity">{this.props.data.quantity}</span>
+				<img className="img-battle-ent" src={sprintf("assets/img/entities/ent-%04d.png", this.props.data.ent_id)} />
+			</a>
+		);
+	}
+});		
+
+AppBodyBattleOld = React.createClass({
+	render: function(){
+		var cells = [];
+		var battleMap = {
+		
+		};
+		addBattleMapEnt(battleMap, 0, 1, 1);
+		addBattleMapEnt(battleMap, 0, 4, 2);
+		// addBattleMapEnt(battleMap, 0, 7, 3);
+		addBattleMapEnt(battleMap, 1, 2, 4);
+		addBattleMapEnt(battleMap, 1, 5, 6);
+		addBattleMapEnt(battleMap, 1, 3, 7);
+		
+		var lx = BATTLE_CELLS_WIDTH-1
+		addBattleMapEnt(battleMap, lx, 0, 9);
+		addBattleMapEnt(battleMap, lx, 3, 11);
+		addBattleMapEnt(battleMap, lx, 5, 13);
+		addBattleMapEnt(battleMap, lx-1, 4, 12);
+		addBattleMapEnt(battleMap, lx-1, 1, 15);
+		
+		var cx = classNames;
+		for(var y = 0; y < BATTLE_CELLS_HEIGHT; y++){
+			for(var x = 0; x < BATTLE_CELLS_WIDTH; x++){
+				var classes = {
+					"div-battle-cell": true,
+					// "bg-warning": x === 0,
+				};
+				var cellContent = "";
+				if(battleMap[x] !== undefined && battleMap[x][y] !== undefined){
+					mapEnt = battleMap[x][y];
+					var className = x < BATTLE_CELLS_WIDTH/2 ? "battle-ent-enemy" : "battle-ent-my";
+					// cellContent = <img className={className} style={{width:"100%"}} src={sprintf("assets/img/entities/ent-%04d.png", mapEnt.item_id)} />
+					cellContent = <BattleEntity data={mapEnt} />
+				}
+				cells.push(
+					<div className={cx(classes)} key={x+"-"+y} style={{left:BATTLE_CELL_WIDTH*x, top:BATTLE_CELL_HEIGHT*y, width:BATTLE_CELL_WIDTH+1, height:BATTLE_CELL_HEIGHT+1}}>
+						{cellContent}
+					</div>
+				);
+			}
+		}
+		return (
+			<div>
+				<div className="row">
+					<div className="col-md-12">
+						<h1>Battle demo</h1>
+					</div>
+				</div>
+				<div className="row">
+					<div className="col-md-12">
+						<div className="div-battle-board center-block" style={{width:BATTLE_CELL_WIDTH*BATTLE_CELLS_WIDTH, height:BATTLE_CELL_HEIGHT*BATTLE_CELLS_HEIGHT}}>
+							{cells}
+						</div>
+					</div>
+				</div>
+			</div>		
+		);
+	}
+});
+
+AppBodyBattleNew = React.createClass({
+	render: function(){
+		return (
+			<div className="row">
+				<div className="col-md-12">
+					<div className="div-battle-board-new center-block">
+						sdhsdkjah
+					</div>
+				</div>
+			</div>
+		);
+	}
+});
+
 AppBody = React.createClass({
 	getInitialState: function() {
 		return {page: null};
 	},
 	
 	selectPage: function(page){
+		playMenuClickSound();
 		this.setState({page: page});
 	},
 	
@@ -390,6 +505,12 @@ AppBody = React.createClass({
 		if(page === "index"){
 			return <AppBodyIndex app={this.props.app} />;
 		}
+		if(page === "battle"){
+			return <AppBodyBattleNew app={this.props.app} />;
+		}
+		if(page === "battle-old"){
+			return <AppBodyBattleOld app={this.props.app} />;
+		}
 		return <AppBodyTest app={this.props.app} />;
 	}
 });
@@ -401,12 +522,31 @@ LoginForm = React.createClass({
 	
 	switchToLoginForm: function(event){
 		event.preventDefault();
+		playMenuClickSound();
 		this.setState({form: "login"});
 	},
 	
 	switchToRemembeMeForm: function(event){
 		event.preventDefault();
+		playMenuClickSound();
 		this.setState({form: "rememberMe"});
+	},
+	
+	componentDidMount: function(){
+		<%if(RECAPTCHA2_ENABLED){%>
+		this.recaptchaWidget = grecaptcha.render('recaptcha-container', {
+			'sitekey': <%=json.encode(RECAPTCHA2_SITEKEY)%>,
+			'callback': function(response){
+				console.log('recaptcha response', response);
+			}
+        });
+		<%} /* RECAPTCHA2_ENABLED */ %>
+	},
+	
+	componentWillUnmount: function(){
+		<%if(RECAPTCHA2_ENABLED){%>
+		grecaptcha.reset(this.recaptchaWidget);
+		<%} /* RECAPTCHA2_ENABLED */ %>
 	},
 	
 	render: function(){
@@ -417,14 +557,17 @@ LoginForm = React.createClass({
 						<h1>Remember password</h1>
 					</div><%}%>
 					<form className="" action="" method="post">
+						<%if(RECAPTCHA2_ENABLED){%>
+						<div className="form-group" id="recaptcha-container"></div>
+						<%} /* RECAPTCHA2_ENABLED */ %>
 						<div className="form-group">
-							<label className="control-label" for="LoginForm_username">Username</label>
+							<label className="control-label" htmlFor="LoginForm_username">Username</label>
 							<input className="form-control" placeholder="Введите логин или е-майл" type="text" name="LoginForm[username]" id="LoginForm_username" />
 						</div>
 						<div className="form-group">
-							<p><button className="btn btn-primary btn-lg" type="submit"><span className="glyphicon glyphicon-ok"></span> Remember password</button></p>
-							<p><button className="btn btn-default" onClick={this.switchToLoginForm}>Login</button></p>
-							<p><button className="btn btn-info">Create account</button></p>
+							<p><button className="btn btn-primary" type="submit"><span className="glyphicon glyphicon-repeat"></span> Remember password</button></p>
+							<p><a href onClick={this.switchToLoginForm}>Login</a></p>
+							<p><a href>Create account</a></p>
 						</div>
 					</form>
 				</div>
@@ -436,12 +579,15 @@ LoginForm = React.createClass({
 					<h1>Войти</h1>
 				</div><%}%>
 				<form className="" action="" method="post">
+					<%if(RECAPTCHA2_ENABLED){%>
+					<div className="form-group" id="recaptcha-container"></div>
+					<%} /* RECAPTCHA2_ENABLED */ %>
 					<div className="form-group">
-						<label className="control-label" for="LoginForm_username">Username</label>
+						<label className="control-label" htmlFor="LoginForm_username">Username</label>
 						<input className="form-control" placeholder="Enter your username" type="text" name="LoginForm[username]" id="LoginForm_username" />
 					</div>
 					<div className="form-group">
-						<label className="control-label" for="LoginForm_password">Password</label>
+						<label className="control-label" htmlFor="LoginForm_password">Password</label>
 						<input className="form-control" placeholder="Enter your password" type="password" name="LoginForm[password]" id="LoginForm_password" />
 					</div>
 					<div className="checkbox">
@@ -450,9 +596,9 @@ LoginForm = React.createClass({
 						</label>
 					</div>
 					<div className="form-group">
-						<p><button className="btn btn-primary btn-lg" type="submit"><span className="glyphicon glyphicon-ok"></span> Submit</button></p>
-						<p><button className="btn btn-warning" onClick={this.switchToRemembeMeForm}>Remember password</button></p>
-						<p><button className="btn btn-info">Create account</button></p>
+						<p><button className="btn btn-primary" type="submit"><span className="glyphicon glyphicon-ok"></span> Submit</button></p>
+						<p><a href onClick={this.switchToRemembeMeForm}>Remember password</a></p>
+						<p><a href>Create account</a></p>
 					</div>
 				</form>
 			</div>
@@ -508,6 +654,8 @@ AppNav = React.createClass({
 						<li><a href onClick={this.handleClickPage.bind(this, "researches")}><%=_T.MENU_RESEARCHES%></a></li>
 						<li><a href onClick={this.handleClickPage.bind(this, "production")}><%=_T.MENU_PRODUCTION%></a></li>
 						<li><a href onClick={this.handleClickPage.bind(this, "army")}><%=_T.MENU_ARMY%></a></li>
+						<li><a href onClick={this.handleClickPage.bind(this, "battle")}><%=_T.MENU_BATTLE%></a></li>
+						<li><a href onClick={this.handleClickPage.bind(this, "battle-old")}><%=_T.MENU_BATTLE%> (old)</a></li>
 						<li><a href onClick={this.handleClickPage.bind(this, "locality")}><%=_T.MENU_LOCALITY%></a></li>
 						<li className="divider"></li>
 						<li><a href="#">Separated link</a></li>

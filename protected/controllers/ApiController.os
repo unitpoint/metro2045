@@ -29,14 +29,14 @@ ApiController = extends BaseController {
 	actionSaveArmyName = function(){
 		var user_id = 1
 		var army_id = toNumber(_POST.pk)
-		var name = _POST.value.replace(Regexp(`/\s{2,}/`), " ").trim().sub(0, app.params.MAX_ARMY_NAME_LEN).trim()
+		var name = _POST.value.replace(Regexp(`/\s{2,}/`), " ").trim().sub(0, MAX_ARMY_NAME_LEN).trim()
 		var r = app.db.execute("update {{army}} set name=:name where id=:id and user_id=:user_id",{
 			user_id = user_id, 
 			id = army_id,
 			name = name,
 		})
 		var row = app.db.fetch("select name from {{army}} where id=:id", {id = army_id})
-		@echoJson {result = r, value = row.name, data = _POST}
+		@echoJson {result = r, value = row.name, data = _POST, row = row}
 	},
 	
 	actionCaclulateBattle = function(event_id){
